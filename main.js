@@ -485,12 +485,12 @@ class PriceLevel{
                     if (value > amount) {
                         if (ableToBuy("P", this.price*amount, player.cash)) {
                             insertLogText("Player", "Buy", this.price, amount)
-                            player.insertTrade("Buy", amount, this.price);
-                            player.calculatePNL();
                             this.offerQueue[i] = value - amount;
                             player.position += amount;
                             player.netPosition += amount;
                             player.cash -= (this.price * amount);
+                            player.insertTrade("Buy", amount, this.price);
+                            player.calculatePNL();
                             this.calculateTotalOffer();
                             this.fillTable();
                             amount = 0;
@@ -500,11 +500,11 @@ class PriceLevel{
                     } else if (value === amount) {
                         if (ableToBuy("P", this.price*amount, player.cash)) {
                             insertLogText("Player", "Buy", this.price, amount)
-                            player.insertTrade("Buy", amount, this.price);
-                            player.calculatePNL();
                             player.position += amount;
                             player.netPosition += amount;
                             player.cash -= (this.price * amount);
+                            player.insertTrade("Buy", amount, this.price);
+                            player.calculatePNL();
                             this.offerQueue = splitArray(this.offerQueue, i);
                             this.offerQueueNames = splitArray(this.offerQueueNames, i);
                             this.calculateTotalOffer();
@@ -517,11 +517,11 @@ class PriceLevel{
                     } else {
                         if (ableToBuy("P", this.price*value, player.cash)) {
                             insertLogText("Player", "Buy", this.price, value)
-                            player.insertTrade("Buy", value, this.price);
-                            player.calculatePNL();
                             player.position += value;
                             player.netPosition += value;
                             player.cash -= (this.price * value);
+                            player.insertTrade("Buy", value, this.price);
+                            player.calculatePNL();
                             this.offerQueue = splitArray(this.offerQueue, i);
                             this.offerQueueNames = splitArray(this.offerQueueNames, i);
                             this.calculateTotalOffer();
@@ -619,12 +619,12 @@ class PriceLevel{
                     if (value > amount) {
                         if (ableToSell("P", amount, player.position)) {
                             insertLogText("Player", "Sell", this.price, amount)
-                            player.insertTrade("Sell", amount, this.price);
-                            player.calculatePNL();
                             this.bidQueue[i] = value - amount;
                             player.position -= amount;
                             player.netPosition -= amount;
                             player.cash += (this.price * amount);
+                            player.insertTrade("Sell", amount, this.price);
+                            player.calculatePNL();
                             this.calculateTotalBid();
                             this.fillTable();
                             amount = 0;
@@ -634,11 +634,11 @@ class PriceLevel{
                     } else if (value === amount) {
                         if (ableToSell("P", amount, player.position)) {
                             insertLogText("Player", "Sell", this.price, amount)
-                            player.insertTrade("Sell", amount, this.price);
-                            player.calculatePNL();
                             player.position -= amount;
                             player.netPosition -= amount;
                             player.cash += (this.price * amount);
+                            player.insertTrade("Sell", amount, this.price);
+                            player.calculatePNL();
                             this.bidQueue = splitArray(this.bidQueue, i);
                             this.bidQueueNames = splitArray(this.bidQueueNames, i);
                             this.calculateTotalBid();
@@ -651,11 +651,11 @@ class PriceLevel{
                     } else {
                         if (ableToSell("P", value, player.position)) {
                             insertLogText("Player", "Sell", this.price, value)
-                            player.insertTrade("Sell", value, this.price);
-                            player.calculatePNL();
                             player.position -= value;
                             player.netPosition -= value;
                             player.cash += (this.price * value);
+                            player.insertTrade("Sell", value, this.price);
+                            player.calculatePNL();
                             this.bidQueue = splitArray(this.bidQueue, i);
                             this.bidQueueNames = splitArray(this.bidQueueNames, i);
                             this.calculateTotalBid();
@@ -696,20 +696,18 @@ class PriceLevel{
                     let value = this.offerQueue[i];
                     if (value > amount) {
                         insertLogText("Trader "+ id.toString(), "Buy", this.price, amount)
-                        player.insertTrade("Sell", amount, this.price);
-                        player.calculatePNL();
                         this.offerQueue[i] = value - amount;
                         player.position -= amount;
                         player.netPosition -= amount;
                         player.cash += amount * this.price
+                        player.insertTrade("Sell", amount, this.price);
+                        player.calculatePNL();
                         this.ownOffer -= amount;
                         this.calculateTotalOffer();
                         this.fillTable();
                         amount=0;
                     } else if (value === amount) {
-                        insertLogText("Trader "+ id.toString(), "Buy", this.price, amount)
-                        player.insertTrade("Sell", amount, this.price);
-                        player.calculatePNL();
+                        insertLogText("Trader "+ id.toString(), "Buy", this.price, amount);
                         this.ownOffer -= amount;
                         this.ownOfferCount -= 1;
                         this.offerQueue = splitArray(this.offerQueue, i);
@@ -717,19 +715,21 @@ class PriceLevel{
                         player.position -= amount;
                         player.netPosition -= amount;
                         player.cash += amount * this.price
+                        player.insertTrade("Sell", amount, this.price);
+                        player.calculatePNL();
                         this.calculateTotalOffer();
                         this.fillTable();
                         i--;
                         amount = 0;
                     } else {
                         insertLogText("Trader "+ id.toString(), "Buy", this.price, value)
-                        player.insertTrade("Sell", value, this.price);
-                        player.calculatePNL();
                         this.ownOffer -= value;
                         this.ownOfferCount -= 1;
                         player.position -= value;
                         player.netPosition -= value;
                         player.cash += value * this.price
+                        player.insertTrade("Sell", value, this.price);
+                        player.calculatePNL();
                         this.offerQueue = splitArray(this.offerQueue, i);
                         this.offerQueueNames = splitArray(this.offerQueueNames, i);
                         this.calculateTotalOffer();
@@ -796,20 +796,18 @@ class PriceLevel{
                     let value = this.bidQueue[i];
                     if (value > amount) {
                         insertLogText("Trader "+ id.toString(), "Sell", this.price, amount)
-                        player.insertTrade("Buy", amount, this.price);
-                        player.calculatePNL();
                         this.bidQueue[i] = value - amount;
                         player.position += amount;
                         player.netPosition += amount;
                         player.cash -= amount * this.price
+                        player.insertTrade("Buy", amount, this.price);
+                        player.calculatePNL();
                         this.ownBid -= amount;
                         this.calculateTotalBid();
                         this.fillTable();
                         amount=0;
                     } else if (value === amount) {
                         insertLogText("Trader "+ id.toString(), "Sell", this.price, amount)
-                        player.insertTrade("Buy", amount, this.price);
-                        player.calculatePNL();
                         this.ownBid -= amount;
                         this.ownBidCount -= 1;
                         this.bidQueue = splitArray(this.bidQueue, i);
@@ -817,19 +815,21 @@ class PriceLevel{
                         player.position += amount;
                         player.netPosition += amount;
                         player.cash -= amount * this.price
+                        player.insertTrade("Buy", amount, this.price);
+                        player.calculatePNL();
                         this.calculateTotalBid();
                         this.fillTable();
                         i--;
                         amount = 0;
                     } else {
                         insertLogText("Trader "+ id.toString(), "Sell", this.price, value)
-                        player.insertTrade("Buy", value, this.price);
-                        player.calculatePNL();
                         this.ownBid -= value;
                         this.ownBidCount -= 1;
                         player.position += value;
                         player.netPosition += value;
                         player.cash -= value * this.price
+                        player.insertTrade("Buy", value, this.price);
+                        player.calculatePNL();
                         this.bidQueue = splitArray(this.bidQueue, i);
                         this.bidQueueNames = splitArray(this.bidQueueNames, i);
                         this.calculateTotalBid();
